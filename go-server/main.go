@@ -1,4 +1,3 @@
-
 package main 
 
 import (
@@ -25,6 +24,10 @@ func formHandler (w http.ResponseWriter, r *http.Request){
 		return 
 	}
 	fmt.Fprintf(w, "Post request successful bitches ")
+	name := r.FormValue("name")
+	address := r.FormValue("address")
+	fmt.Fprintf(w , "Nmae : %S\n", name)
+	fmt.Fprintf(W, "aDDRESS ") 
 }
 
 
