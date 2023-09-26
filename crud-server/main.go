@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -28,6 +29,22 @@ type Director struct {
 
 var movies []Movie
 
+func getMovies(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(movies)
+}
+
+func deleteMovie(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for index, item := range movies {
+		if item.ID == params["id"] {
+			movies = append(movies[:index], movies[index+1:]...)
+			break
+		}
+	}
+}
+
 func main() {
 	r := mux.NewRouter()
 	movies = append(movies, Movie{ID: "1", Isbn: "4384587", Title: "Movie one", Director: &Director{Firstname: "John", Lastname: "Doe"}})
@@ -35,9 +52,9 @@ func main() {
 	movies = append(movies, Movie{ID: "3", Isbn: "438342", Title: "Movie Three", Director: &Director{Firstname: "Trevor", Lastname: "Wallace"}})
 
 	r.HandleFunc("/movies", getMovies).Methods("GET")
-	r.HandleFunc("/movies/{id}", getMovie).Methods("GET")
-	r.HandleFunc("/movies", createMovie).Methods("POST")
-	r.HandleFunc("/movies/{id}", updateMovie).Methods("PUT")
+	//r.HandleFunc("/movies/{id}", getMovie).Methods("GET")
+	//r.HandleFunc("/movies", createMovie).Methods("POST")
+	//r.HandleFunc("/movies/{id}", updateMovie).Methods("PUT")
 	r.HandleFunc("/movies/{id}", deleteMovie).Methods("DELETE")
 
 	fmt.Printf("String server at port 8000\n")
