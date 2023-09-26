@@ -66,6 +66,7 @@ func createMovie(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewDecoder(r.Body).Decode(&movie)
 	movie.ID = strconv.Itoa(rand.Intn(10000000))
 	movies = append(movies, movie)
+	json.NewEncoder(w).Encode(movie)
 
 }
 
